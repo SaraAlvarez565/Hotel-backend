@@ -4,6 +4,7 @@ import com.hotel.backend.model.User;
 import com.hotel.backend.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -13,6 +14,10 @@ public class UserService {
 
     public UserService(UserRepository repo) {
         this.repo = repo;
+    }
+
+    public List<User> findAll() {
+        return repo.findAll();
     }
 
     public User register(User user) {

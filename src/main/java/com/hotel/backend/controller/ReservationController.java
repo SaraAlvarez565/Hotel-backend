@@ -25,12 +25,12 @@ public class ReservationController {
 
         Reservation saved = service.save(r);
 
-        emailService.sendReservationEmail(
-                "usuario@test.com",
-                saved.getProduct().getName(),
-                saved.getStartDate().toString(),
-                saved.getEndDate().toString()
-        );
+        // emailService.sendReservationEmail(
+               // "usuario@test.com",
+              //  saved.getProduct().getName(),
+               // saved.getStartDate().toString(),
+               // saved.getEndDate().toString()
+       // )
 
         return saved;
     }
