@@ -32,8 +32,18 @@ public class ProductController {
         return service.byCategory(id);
     }
 
+    @GetMapping("/{id}")
+    public Product getById(@PathVariable Long id) {
+        return service.getById(id);
+    }
+
     @PostMapping
     public Product create(@RequestBody Product p) {
         return service.save(p);
+    }
+
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable Long id) {
+        service.delete(id);
     }
 }

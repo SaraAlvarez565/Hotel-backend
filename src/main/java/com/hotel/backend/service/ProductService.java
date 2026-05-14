@@ -19,6 +19,11 @@ public class ProductService {
         return repository.findAll();
     }
 
+    public Product getById(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
+    }
+
     public List<Product> search(String name) {
         return repository.findByNameContainingIgnoreCase(name);
     }
@@ -29,5 +34,9 @@ public class ProductService {
 
     public Product save(Product p) {
         return repository.save(p);
+    }
+
+    public void delete(Long id) {
+        repository.deleteById(id);
     }
 }
