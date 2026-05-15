@@ -28,7 +28,11 @@ public class UserService {
             throw new RuntimeException("Email ya registrado");
         }
 
-        user.setRole("USER");
+        if (user.getEmail().equalsIgnoreCase("admin@staybloom.com")) {
+            user.setRole("ADMIN");
+        } else {
+            user.setRole("USER");
+        }
 
         return repo.save(user);
     }
