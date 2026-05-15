@@ -1,7 +1,10 @@
 package com.hotel.backend.service;
 
 import com.hotel.backend.model.Product;
+import com.hotel.backend.repository.FavoriteRepository;
 import com.hotel.backend.repository.ProductRepository;
+import com.hotel.backend.repository.ReservationRepository;
+import com.hotel.backend.repository.ReviewRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,9 +13,20 @@ import java.util.List;
 public class ProductService {
 
     private final ProductRepository repository;
+    private final ReservationRepository reservationRepository;
+    private final ReviewRepository reviewRepository;
+    private final FavoriteRepository favoriteRepository;
 
-    public ProductService(ProductRepository repository) {
+    public ProductService(
+            ProductRepository repository,
+            ReservationRepository reservationRepository,
+            ReviewRepository reviewRepository,
+            FavoriteRepository favoriteRepository
+    ) {
         this.repository = repository;
+        this.reservationRepository = reservationRepository;
+        this.reviewRepository = reviewRepository;
+        this.favoriteRepository = favoriteRepository;
     }
 
     public List<Product> getAll() {
@@ -37,6 +51,13 @@ public class ProductService {
     }
 
     public void delete(Long id) {
+
+        favoriteRepository.deleteByProductId(id);
+
+        reviewRepository.deleteByProductId(id);
+
+        reservationRepository.deleteByProductId(id);
+
         repository.deleteById(id);
     }
 }

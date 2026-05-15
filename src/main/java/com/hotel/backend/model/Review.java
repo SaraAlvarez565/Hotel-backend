@@ -1,5 +1,6 @@
 package com.hotel.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -26,5 +27,9 @@ public class Review {
     private User user;
 
     @ManyToOne
+    @JsonIgnoreProperties({
+            "features",
+            "category"
+    })
     private Product product;
 }

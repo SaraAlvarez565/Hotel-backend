@@ -1,5 +1,6 @@
 package com.hotel.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -21,6 +22,10 @@ public class Reservation {
     private LocalDate endDate;
 
     @ManyToOne
+    @JsonIgnoreProperties({
+            "features",
+            "category"
+    })
     private Product product;
 
     @ManyToOne

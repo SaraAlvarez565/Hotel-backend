@@ -1,5 +1,6 @@
 package com.hotel.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -10,6 +11,10 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonIgnoreProperties({
+        "hibernateLazyInitializer",
+        "handler"
+})
 public class Product {
 
     @Id
@@ -19,16 +24,20 @@ public class Product {
     @Column(unique = true)
     private String name;
 
+    @Column(length = 3000)
     private String description;
 
     private String imageUrl;
 
-    // ✔ NUEVO: categoría del producto
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "category_id")
+    @JsonIgnoreProperties({
+            "hibernateLazyInitializer",
+            "handler"
+    })
     private Category category;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "product_feature",
             joinColumns = @JoinColumn(name = "product_id"),
