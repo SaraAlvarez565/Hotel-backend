@@ -1,7 +1,7 @@
 package com.hotel.backend.controller;
 
 import com.hotel.backend.model.Category;
-import com.hotel.backend.repository.CategoryRepository;
+import com.hotel.backend.service.CategoryService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -11,24 +11,24 @@ import java.util.List;
 @CrossOrigin("*")
 public class CategoryController {
 
-    private final CategoryRepository repo;
+    private final CategoryService service;
 
-    public CategoryController(CategoryRepository repo) {
-        this.repo = repo;
+    public CategoryController(CategoryService service) {
+        this.service = service;
     }
 
     @GetMapping
     public List<Category> getAll() {
-        return repo.findAll();
+        return service.getAll();
     }
 
     @PostMapping
     public Category create(@RequestBody Category c) {
-        return repo.save(c);
+        return service.create(c);
     }
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
-        repo.deleteById(id);
+        service.delete(id);
     }
 }
