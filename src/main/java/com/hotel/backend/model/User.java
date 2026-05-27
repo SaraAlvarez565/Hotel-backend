@@ -24,6 +24,7 @@ public class User {
     private String lastname;
 
     @Email
+    @NotBlank
     @Column(unique = true)
     private String email;
 

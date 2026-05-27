@@ -1,5 +1,8 @@
 package com.hotel.backend.controller;
 
+import com.hotel.backend.dto.AuthRequest;
+import com.hotel.backend.dto.RegisterRequest;
+import com.hotel.backend.dto.UserResponse;
 import com.hotel.backend.model.User;
 import com.hotel.backend.service.UserService;
 import jakarta.validation.Valid;
@@ -18,24 +21,40 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<User> register(
-            @Valid @RequestBody User user
+    public ResponseEntity<UserResponse> register(
+            @Valid @RequestBody RegisterRequest request
     ) {
 
+        User user = service.register(request);
+
         return ResponseEntity.ok(
-                service.register(user)
+                new UserResponse(
+                        user.getId(),
+                        user.getName(),
+                        user.getLastname(),
+                        user.getEmail(),
+                        user.getRole()
+                )
         );
     }
 
     @PostMapping("/login")
-    public ResponseEntity<User> login(
-            @RequestBody User user
+    public ResponseEntity<UserResponse> login(
+            @Valid @RequestBody AuthRequest request
     ) {
 
+        User user = service.login(
+                request.getEmail(),
+                request.getPassword()
+        );
+
         return ResponseEntity.ok(
-                service.login(
+                new UserResponse(
+                        user.getId(),
+                        user.getName(),
+                        user.getLastname(),
                         user.getEmail(),
-                        user.getPassword()
+                        user.getRole()
                 )
         );
     }
