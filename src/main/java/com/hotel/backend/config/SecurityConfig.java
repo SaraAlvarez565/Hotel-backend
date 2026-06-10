@@ -9,6 +9,9 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.*;
+import org.springframework.security.config.Customizer;
+import java.util.List;
 
 @Configuration
 public class SecurityConfig {
@@ -19,36 +22,40 @@ public class SecurityConfig {
         this.userDetailsService = userDetailsService;
     }
 
+        @Bean
+        public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
+            System.out.println("########## ENTRANDO A SECURITY FILTER CHAIN ##########");
+
+            http
+                    .csrf(csrf -> csrf.disable())
+                    .cors(cors -> cors.disable())
+                    .authorizeHttpRequests(auth -> auth
+                            .anyRequest().permitAll()
+                    )
+                    .formLogin(form -> form.disable())
+                    .httpBasic(httpBasic -> httpBasic.disable());
+
+            return http.build();
+        }
+
+
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public CorsConfigurationSource corsConfigurationSource() {
 
-        http
-                .csrf(csrf -> csrf.disable())
+        CorsConfiguration config = new CorsConfiguration();
 
-                .authorizeHttpRequests(auth -> auth
+        config.setAllowedOrigins(List.of("http://localhost:5173"));
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        config.setAllowedHeaders(List.of("*"));
+        config.setAllowCredentials(true);
 
-                        .requestMatchers("/api/auth/**").permitAll()
+        UrlBasedCorsConfigurationSource source =
+                new UrlBasedCorsConfigurationSource();
 
-                        .requestMatchers(HttpMethod.GET,
-                                "/api/products/**",
-                                "/api/categories/**",
-                                "/api/reviews/**"
-                        ).permitAll()
+        source.registerCorsConfiguration("/**", config);
 
-                        .requestMatchers("/api/reservations/**").authenticated()
-                        .requestMatchers("/api/favorites/**").authenticated()
-
-                        // SOLO ADMIN
-                        .requestMatchers("/api/users/**").hasRole("ADMIN")
-
-                        .anyRequest().authenticated()
-                )
-
-                .formLogin(form -> form.disable())
-
-                .httpBasic(httpBasic -> {});
-
-        return http.build();
+        return source;
     }
 
     @Bean

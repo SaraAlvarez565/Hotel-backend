@@ -1,5 +1,6 @@
 package com.hotel.backend.controller;
 
+import com.hotel.backend.dto.UserResponse;
 import com.hotel.backend.model.User;
 import com.hotel.backend.service.UserService;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +18,17 @@ public class UserController {
     }
 
     @GetMapping
-    public List<User> getAllUsers() {
-        return userService.findAll();
+    public List<UserResponse> getAllUsers() {
+
+        return userService.findAll()
+                .stream()
+                .map(user -> new UserResponse(
+                        user.getId(),
+                        user.getName(),
+                        user.getLastname(),
+                        user.getEmail(),
+                        user.getRole()
+                ))
+                .toList();
     }
 }

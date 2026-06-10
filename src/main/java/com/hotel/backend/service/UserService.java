@@ -8,7 +8,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
+import com.hotel.backend.exception.BadRequestException;
 import java.util.List;
 
 @Service
@@ -35,7 +35,7 @@ public class UserService {
     public User register(RegisterRequest request) {
 
         if (repo.findByEmail(request.getEmail()).isPresent()) {
-            throw new RuntimeException("Email ya registrado");
+            throw new BadRequestException("Email ya registrado");
         }
 
         User user = new User();
@@ -44,9 +44,9 @@ public class UserService {
         user.setEmail(request.getEmail());
 
         if (user.getEmail().equalsIgnoreCase("admin@staybloom.com")) {
-            user.setRole("ROLE_ADMIN");
+            user.setRole("ADMIN");
         } else {
-            user.setRole("ROLE_USER");
+            user.setRole("USER");
         }
 
         user.setPassword(encoder.encode(request.getPassword()));
@@ -63,6 +63,8 @@ public class UserService {
         SecurityContextHolder.getContext().setAuthentication(auth);
 
         return repo.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Usuario no existe"));
+                .orElseThrow(() ->
+                        new BadRequestException("Usuario no existe")
+                );
     }
 }

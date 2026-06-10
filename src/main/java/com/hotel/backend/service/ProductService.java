@@ -1,10 +1,7 @@
 package com.hotel.backend.service;
 
 import com.hotel.backend.model.Product;
-import com.hotel.backend.repository.FavoriteRepository;
-import com.hotel.backend.repository.ProductRepository;
-import com.hotel.backend.repository.ReservationRepository;
-import com.hotel.backend.repository.ReviewRepository;
+import com.hotel.backend.repository.*;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -38,24 +35,13 @@ public class ProductService {
                 .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
     }
 
-    public List<Product> search(String name) {
-        return repository.findByNameContainingIgnoreCase(name);
-    }
-
-    public List<Product> byCategory(Long id) {
-        return repository.findByCategoryId(id);
-    }
-
     public Product save(Product p) {
         return repository.save(p);
     }
 
     public void delete(Long id) {
-
         favoriteRepository.deleteByProductId(id);
-
         reviewRepository.deleteByProductId(id);
-
         reservationRepository.deleteByProductId(id);
 
         repository.deleteById(id);
